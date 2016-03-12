@@ -54,8 +54,20 @@
   (if (eof-object? tree)
       (void)
       (begin
-        (printf "~a~n"
-         (tokenize-nouns (first tree)))
+        (extract 4
+                 (tokenize-nouns (first tree)))
         (tokenize-input))))
+
+(define (extract distance tokens)
+  (if (empty? tokens)
+      (void)
+      (let ([curr-loc (noun-order (first tokens))]
+            [curr-word (noun-name (first tokens))])
+        (map (lambda (n)
+               (if (<= (- (noun-order n) curr-loc) distance)
+                   (printf "~a ~a~n"
+                           curr-word (noun-name n))
+                   (void))) (rest tokens))
+        (extract distance (rest tokens)))))
 
 (tokenize-input)
